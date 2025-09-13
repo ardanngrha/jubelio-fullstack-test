@@ -1,18 +1,14 @@
 import type { FastifyInstance } from 'fastify';
-import {
-  getAdjustmentTransactions,
-  getAdjustmentTransactionDetail,
-  createAdjustmentTransaction,
-  updateAdjustmentTransaction,
-  deleteAdjustmentTransaction,
-} from '../controllers/adjustmentTransactionController.ts';
+import { AdjustmentTransactionController } from '../controllers/adjustmentTransactionController.ts';
+
+const adjustmentTransactionController = new AdjustmentTransactionController();
 
 export async function adjustmentRoutes(fastify: FastifyInstance): Promise<void> {
   // Get adjustment transactions with pagination
-  fastify.get('/adjustments', getAdjustmentTransactions);
+  fastify.get('/adjustments', adjustmentTransactionController.getAdjustmentTransactions);
 
   // Get adjustment transaction detail by ID
-  fastify.get('/adjustments/:id', getAdjustmentTransactionDetail);
+  fastify.get('/adjustments/:id', adjustmentTransactionController.getAdjustmentTransactionDetail);
 
   // Create new adjustment transaction
   fastify.post(
@@ -29,7 +25,7 @@ export async function adjustmentRoutes(fastify: FastifyInstance): Promise<void> 
         },
       },
     },
-    createAdjustmentTransaction
+    adjustmentTransactionController.createAdjustmentTransaction
   );
 
   // Update adjustment transaction by ID
@@ -46,9 +42,9 @@ export async function adjustmentRoutes(fastify: FastifyInstance): Promise<void> 
         },
       },
     },
-    updateAdjustmentTransaction
+    adjustmentTransactionController.updateAdjustmentTransaction
   );
 
   // Delete adjustment transaction by ID
-  fastify.delete('/adjustments/:id', deleteAdjustmentTransaction);
+  fastify.delete('/adjustments/:id', adjustmentTransactionController.deleteAdjustmentTransaction);
 }

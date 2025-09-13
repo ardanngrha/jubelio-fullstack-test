@@ -1,19 +1,14 @@
 import type { FastifyInstance } from 'fastify';
-import {
-  getProducts,
-  getProductDetail,
-  createProduct,
-  updateProduct,
-  deleteProduct,
-  importProductsFromDummyJson,
-} from '../controllers/productController.ts';
+import { ProductController } from '../controllers/productController.ts';
+
+const productController = new ProductController();
 
 export async function productRoutes(fastify: FastifyInstance): Promise<void> {
   // Get products with pagination
-  fastify.get('/products', getProducts);
+  fastify.get('/products', productController.getProducts);
 
   // Get product detail by SKU
-  fastify.get('/products/:sku', getProductDetail);
+  fastify.get('/products/:sku', productController.getProductDetail);
 
   // Create new product
   fastify.post(
@@ -33,7 +28,7 @@ export async function productRoutes(fastify: FastifyInstance): Promise<void> {
         },
       },
     },
-    createProduct
+    productController.createProduct
   );
 
   // Update product by SKU
@@ -52,12 +47,12 @@ export async function productRoutes(fastify: FastifyInstance): Promise<void> {
         },
       },
     },
-    updateProduct
+    productController.updateProduct
   );
 
   // Delete product by SKU
-  fastify.delete('/products/:sku', deleteProduct);
+  fastify.delete('/products/:sku', productController.deleteProduct);
 
   // Import products from DummyJSON
-  fastify.post('/products/import', importProductsFromDummyJson);
+  fastify.post('/products/import', productController.importProductsFromDummyJson);
 }
