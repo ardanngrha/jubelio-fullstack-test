@@ -18,7 +18,9 @@ export class ProductController {
       reply.send(response);
     } catch (error) {
       console.error('Error fetching products:', error);
-      reply.status(500).send({ error: 'Failed to fetch products' });
+      reply
+        .status(500)
+        .send({ error: 'Failed to fetch products', message: (error as Error).message });
     }
   };
 
@@ -37,7 +39,9 @@ export class ProductController {
       reply.send(product);
     } catch (error) {
       console.error('Error fetching product detail:', error);
-      reply.status(500).send({ error: 'Failed to fetch product detail' });
+      reply
+        .status(500)
+        .send({ error: 'Failed to fetch product detail', message: (error as Error).message });
     }
   };
 
@@ -61,21 +65,21 @@ export class ProductController {
         // Unique violation
         reply.status(409).send({ error: 'SKU already exists' });
       } else {
-        reply.status(500).send({ error: 'Failed to create product' });
+        reply
+          .status(500)
+          .send({ error: 'Failed to create product', message: (error as Error).message });
       }
     }
   };
 
   updateProduct = async (
     request: FastifyRequest<{
-      Params: { sku: string };
       Body: Partial<Omit<Product, 'id' | 'sku' | 'created_at' | 'updated_at'>>;
     }>,
     reply: FastifyReply
   ): Promise<void> => {
     try {
-      const { sku } = request.params;
-      const product = await this.productService.updateProduct(sku, request.body);
+      const product = await this.productService.updateProduct(request.body);
 
       if (!product) {
         return reply.status(404).send({ error: 'Product not found' });
@@ -84,7 +88,9 @@ export class ProductController {
       reply.send(product);
     } catch (error) {
       console.error('Error updating product:', error);
-      reply.status(500).send({ error: 'Failed to update product' });
+      reply
+        .status(500)
+        .send({ error: 'Failed to update product', message: (error as Error).message });
     }
   };
 
@@ -100,10 +106,14 @@ export class ProductController {
         return reply.status(404).send({ error: 'Product not found' });
       }
 
-      reply.status(204).send();
+      reply.status(200).send({
+        message: 'Product deleted successfully',
+      });
     } catch (error) {
       console.error('Error deleting product:', error);
-      reply.status(500).send({ error: 'Failed to delete product' });
+      reply
+        .status(500)
+        .send({ error: 'Failed to delete product', message: (error as Error).message });
     }
   };
 
@@ -116,7 +126,9 @@ export class ProductController {
       reply.send(result);
     } catch (error) {
       console.error('Error importing products:', error);
-      reply.status(500).send({ error: 'Failed to import products' });
+      reply
+        .status(500)
+        .send({ error: 'Failed to import products', message: (error as Error).message });
     }
   };
 }

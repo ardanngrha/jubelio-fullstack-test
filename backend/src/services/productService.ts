@@ -14,36 +14,40 @@ export class ProductService {
     const offset = (validPage - 1) * validLimit;
 
     let whereClause = '';
+    let countWhereClause = '';
     const params: unknown[] = [validLimit, offset];
+    const countParams: unknown[] = [];
 
     if (search) {
       whereClause = 'WHERE p.title ILIKE $3 OR p.sku ILIKE $3';
+      countWhereClause = 'WHERE p.title ILIKE $1 OR p.sku ILIKE $1';
       params.push(`%${search}%`);
+      countParams.push(`%${search}%`);
     }
 
     const productQuery = `
-      SELECT 
-        p.*,
-        COALESCE(SUM(at.qty), 0) as stock
-      FROM products p
-      LEFT JOIN adjustment_transactions at ON p.sku = at.sku
-      ${whereClause}
-      GROUP BY p.id, p.title, p.sku, p.image, p.price, p.description, p.created_at, p.updated_at
-      ORDER BY p.created_at DESC
-      LIMIT $1 OFFSET $2
-    `;
+    SELECT 
+      p.*,
+      COALESCE(SUM(at.qty), 0) as stock
+    FROM products p
+    LEFT JOIN adjustment_transactions at ON p.sku = at.sku
+    ${whereClause}
+    GROUP BY p.id, p.title, p.sku, p.image, p.price, p.description, p.created_at, p.updated_at
+    ORDER BY p.created_at DESC
+    LIMIT $1 OFFSET $2
+  `;
 
     const countQuery = `
-      SELECT COUNT(DISTINCT p.id) as total
-      FROM products p
-      ${whereClause}
-    `;
+    SELECT COUNT(DISTINCT p.id) as total
+    FROM products p
+    ${countWhereClause}
+  `;
 
     const [products, countResult] = await Promise.all([
       db.any(productQuery, params),
       db.one(
         search ? countQuery : 'SELECT COUNT(*) as total FROM products',
-        search ? [`%${search}%`] : []
+        search ? countParams : []
       ),
     ]);
 
@@ -84,14 +88,18 @@ export class ProductService {
   }
 
   async updateProduct(
-    sku: string,
-    updates: Partial<Omit<Product, 'id' | 'sku' | 'created_at' | 'updated_at'>>
+    updates: Partial<Omit<Product, 'id' | 'created_at' | 'updated_at'>>
   ): Promise<Product | null> {
-    const setClause = Object.keys(updates)
+    if (!updates.sku) {
+      throw new Error('SKU is required to update a product.');
+    }
+
+    const { sku, ...fieldsToUpdate } = updates;
+    const setClause = Object.keys(fieldsToUpdate)
       .map((key, index) => `${key} = $${index + 2}`)
       .join(', ');
 
-    const values = [sku, ...Object.values(updates)];
+    const values = [sku, ...Object.values(fieldsToUpdate)];
 
     const query = `
       UPDATE products 

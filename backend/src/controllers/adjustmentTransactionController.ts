@@ -20,7 +20,10 @@ export class AdjustmentTransactionController {
       reply.send(response);
     } catch (error) {
       console.error('Error fetching adjustment transactions:', error);
-      reply.status(500).send({ error: 'Failed to fetch adjustment transactions' });
+      reply.status(500).send({
+        error: 'Failed to fetch adjustment transactions',
+        message: (error as Error).message,
+      });
     }
   };
 
@@ -41,7 +44,9 @@ export class AdjustmentTransactionController {
       reply.send(transaction);
     } catch (error) {
       console.error('Error fetching transaction detail:', error);
-      reply.status(500).send({ error: 'Failed to fetch transaction detail' });
+      reply
+        .status(500)
+        .send({ error: 'Failed to fetch transaction detail', message: (error as Error).message });
     }
   };
 
@@ -68,7 +73,10 @@ export class AdjustmentTransactionController {
         }
       }
 
-      reply.status(500).send({ error: 'Failed to create adjustment transaction' });
+      reply.status(500).send({
+        error: 'Failed to create adjustment transaction',
+        message: (error as Error).message,
+      });
     }
   };
 
@@ -102,7 +110,10 @@ export class AdjustmentTransactionController {
         }
       }
 
-      reply.status(500).send({ error: 'Failed to update adjustment transaction' });
+      reply.status(500).send({
+        error: 'Failed to update adjustment transaction',
+        message: (error as Error).message,
+      });
     }
   };
 
@@ -120,10 +131,13 @@ export class AdjustmentTransactionController {
         return reply.status(404).send({ error: 'Transaction not found' });
       }
 
-      reply.status(204).send();
+      reply.status(200).send({ message: 'Adjustment transaction deleted successfully' });
     } catch (error) {
       console.error('Error deleting adjustment transaction:', error);
-      reply.status(500).send({ error: 'Failed to delete adjustment transaction' });
+      reply.status(500).send({
+        error: 'Failed to delete adjustment transaction',
+        message: (error as Error).message,
+      });
     }
   };
 }
