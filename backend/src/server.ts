@@ -12,6 +12,7 @@ export function buildServer(): FastifyInstance {
   // Register CORS
   server.register(cors, {
     origin: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
   });
 
   // Health check endpoint

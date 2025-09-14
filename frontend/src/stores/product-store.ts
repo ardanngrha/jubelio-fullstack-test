@@ -20,7 +20,12 @@ interface ProductState {
   addProduct: (product: ProductPayload) => Promise<void>;
   updateProduct: (sku: string, product: ProductPayload) => Promise<void>;
   removeProduct: (sku: string) => Promise<void>;
-  importProducts: () => Promise<void>;
+  importProducts: () => Promise<{
+    message: string;
+    inserted: number;
+    skipped: number;
+    skippedSKUs: string[];
+  }>;
   reset: () => void;
 }
 
@@ -77,8 +82,9 @@ const useProductStore = create<ProductState>((set, get) => ({
   },
 
   importProducts: async () => {
-    await importProducts();
+    const result = await importProducts();
     get().fetchProducts(1);
+    return result;
   },
 
   reset: () => set({ products: [], page: 1, totalPages: 1, totalProducts: 0 }),

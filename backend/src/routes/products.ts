@@ -58,5 +58,5 @@ export async function productRoutes(fastify: FastifyInstance): Promise<void> {
   fastify.delete('/products/:sku', productController.deleteProduct);
 
   // Import products from DummyJSON
-  fastify.post('/products/import', productController.importProductsFromDummyJson);
+  fastify.get('/products/import', productController.importProductsFromDummyJson);
 }

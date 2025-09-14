@@ -23,10 +23,11 @@ export default function ProductsPage() {
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <h1 className="text-3xl font-bold tracking-tight">Products</h1>
-          <span className="text-lg text-muted-foreground">
+          <span className="text-lg pt-1 text-muted-foreground">
             ({totalProducts} items)
           </span>
         </div>
+
         <div className="flex w-full sm:w-auto items-center space-x-2">
           <Input
             placeholder="Search products..."

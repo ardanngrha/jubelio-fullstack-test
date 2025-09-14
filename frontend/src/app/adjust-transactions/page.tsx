@@ -28,12 +28,10 @@ export default function AdjustmentsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
         <div className="flex items-center gap-4">
-          <h1 className="text-3xl font-bold tracking-tight">
-            Adjust Transactions
-          </h1>
-          <span className="text-lg text-muted-foreground">
+          <h1 className="text-3xl font-bold tracking-tight">Transactions</h1>
+          <span className="text-lg pt-1 text-muted-foreground">
             ({totalAdjustments} items)
           </span>
         </div>

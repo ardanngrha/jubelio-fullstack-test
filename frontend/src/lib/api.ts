@@ -27,7 +27,6 @@ export const getProducts = async (
   const res = await fetch(`${API_BASE_URL}/products?${query.toString()}`);
   if (!res.ok) throw new Error('Failed to fetch products');
   const data = await res.json();
-  console.log(data);
   return {
     products: data.data,
     totalPages: data.pagination.totalPages,
@@ -35,19 +34,17 @@ export const getProducts = async (
   };
 };
 
-export const importProducts = async (): Promise<void> => {
+export const importProducts = async (): Promise<{
+  message: string;
+  inserted: number;
+  skipped: number;
+  skippedSKUs: string[];
+}> => {
   const res = await fetch(`${API_BASE_URL}/products/import`);
   if (!res.ok) throw new Error('Failed to fetch products from dummyjson');
   const data = await res.json();
-  const products: ProductPayload[] = data.products.map((p: Product) => ({
-    title: p.title,
-    sku: p.sku,
-    image: p.image,
-    price: p.price,
-    description: p.description,
-  }));
 
-  await Promise.all(products.map((p) => createProduct(p)));
+  return data;
 };
 
 export const createProduct = async (
@@ -98,7 +95,6 @@ export const getAdjustments = async (
   const res = await fetch(`${API_BASE_URL}/adjustments?${query.toString()}`);
   if (!res.ok) throw new Error('Failed to fetch adjustments');
   const data = await res.json();
-  console.log(data);
   return {
     adjustments: data.data,
     totalPages: data.pagination.totalPages,
@@ -116,6 +112,7 @@ export const createAdjustment = async (
   });
   if (!res.ok) {
     const errorData = await res.json();
+    console.log(errorData);
     throw new Error(errorData.message || 'Failed to create adjustment');
   }
   return res.json();
@@ -132,6 +129,7 @@ export const updateAdjustment = async (
   });
   if (!res.ok) {
     const errorData = await res.json();
+    console.log(errorData);
     throw new Error(errorData.message || 'Failed to update adjustment');
   }
   return res.json();

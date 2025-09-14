@@ -22,8 +22,10 @@ export function ImportConfirmationDialog({
 
   const handleImport = async () => {
     try {
-      await importProducts();
-      toast.success('Products imported successfully');
+      const result = await importProducts();
+      toast.success(
+        `Successfully imported products. Imported: ${result.inserted}. Duplicates: ${result.skipped}`,
+      );
       setOpen(false);
     } catch (error) {
       toast.error('Failed to import products');
@@ -38,8 +40,8 @@ export function ImportConfirmationDialog({
         <DialogHeader>
           <DialogTitle>Are you sure?</DialogTitle>
           <DialogDescription>
-            This action will import products from dummyjson.com. This may create
-            duplicate products if they already exist.
+            This action will import products from dummyjson.com. Existing
+            products with the same SKU will not be duplicated.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
