@@ -23,21 +23,33 @@ export class AdjustmentTransactionRepository {
     }
 
     const queryStr = `
-      SELECT * FROM adjustment_transactions
+      SELECT 
+        a.id,
+        a.sku,
+        a.qty,
+        (a.qty * p.price) as amount,
+        a.created_at,
+        a.updated_at
+      FROM adjustment_transactions a
+      JOIN products p ON a.sku = p.sku
       ${whereClause}
-      ORDER BY created_at DESC
+      ORDER BY a.created_at DESC
       LIMIT $1 OFFSET $2
     `;
 
     const countQuery = `
-      SELECT COUNT(*) as total FROM adjustment_transactions
+      SELECT COUNT(*) as total 
+      FROM adjustment_transactions a
+      JOIN products p ON a.sku = p.sku
       ${whereClause}
     `;
 
     const [transactions, countResult] = await Promise.all([
       db.any(queryStr, params),
       db.one(
-        sku ? countQuery : 'SELECT COUNT(*) as total FROM adjustment_transactions',
+        sku
+          ? countQuery
+          : 'SELECT COUNT(*) as total FROM adjustment_transactions a JOIN products p ON a.sku = p.sku',
         sku ? [sku] : []
       ),
     ]);
@@ -51,37 +63,50 @@ export class AdjustmentTransactionRepository {
   }
 
   async getAdjustmentTransactionById(id: number): Promise<AdjustmentTransaction | null> {
-    return await db.oneOrNone('SELECT * FROM adjustment_transactions WHERE id = $1', [id]);
-  }
-
-  async createAdjustmentTransaction(
-    sku: string,
-    qty: number,
-    amount: number
-  ): Promise<AdjustmentTransaction> {
     const query = `
-      INSERT INTO adjustment_transactions (sku, qty, amount)
-      VALUES ($1, $2, $3)
-      RETURNING *
+      SELECT 
+        a.id,
+        a.sku,
+        a.qty,
+        (a.qty * p.price) as amount,
+        a.created_at,
+        a.updated_at
+      FROM adjustment_transactions a
+      JOIN products p ON a.sku = p.sku
+      WHERE a.id = $1
     `;
 
-    return await db.one(query, [sku, qty, amount]);
+    return await db.oneOrNone(query, [id]);
+  }
+
+  async createAdjustmentTransaction(sku: string, qty: number): Promise<AdjustmentTransaction> {
+    const insertQuery = `
+      INSERT INTO adjustment_transactions (sku, qty)
+      VALUES ($1, $2)
+      RETURNING id
+    `;
+
+    const result = await db.one(insertQuery, [sku, qty]);
+
+    // Get the created transaction with calculated amount
+    return this.getAdjustmentTransactionById(result.id) as Promise<AdjustmentTransaction>;
   }
 
   async updateAdjustmentTransaction(
     id: number,
     sku: string,
-    qty: number,
-    amount: number
+    qty: number
   ): Promise<AdjustmentTransaction> {
-    const query = `
+    const updateQuery = `
       UPDATE adjustment_transactions
-      SET sku = $1, qty = $2, amount = $3
-      WHERE id = $4
-      RETURNING *
+      SET sku = $1, qty = $2, updated_at = CURRENT_TIMESTAMP
+      WHERE id = $3
     `;
 
-    return await db.one(query, [sku, qty, amount, id]);
+    await db.none(updateQuery, [sku, qty, id]);
+
+    // Get the updated transaction with calculated amount
+    return this.getAdjustmentTransactionById(id) as Promise<AdjustmentTransaction>;
   }
 
   async deleteAdjustmentTransaction(id: number): Promise<boolean> {

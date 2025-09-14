@@ -2,7 +2,7 @@ export interface AdjustmentTransaction {
   id?: number;
   sku: string;
   qty: number;
-  amount: number;
+  amount?: number; // Calculated field: qty * product.price
   created_at?: Date;
   updated_at?: Date;
 }

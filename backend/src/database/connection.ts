@@ -4,7 +4,7 @@ import { getCurrentDatabaseConfig } from './config.ts';
 const pgp = pgPromise({});
 const config = getCurrentDatabaseConfig();
 
-console.log(`Connecting to database: ${config.database} on ${config.host}:${config.port}`);
+// console.log(`Connecting to database: ${config.database} on ${config.host}:${config.port}`);
 
 const db = pgp(config);
 

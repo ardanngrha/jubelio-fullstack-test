@@ -10,12 +10,14 @@
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "nodenext",
     "allowImportingTsExtensions": true,
-    "noEmit": true
+    "noEmit": true,
+    "isolatedModules": true
   },
   "include": [
     "src/**/*",
     "migrations/**/*",
-    "tests/**/*"
+    "tests/**/*",
+    "index.ts"
   ],
   "exclude": [
     "node_modules",

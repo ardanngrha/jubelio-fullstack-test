@@ -42,8 +42,7 @@ export class AdjustmentTransactionService {
       );
     }
 
-    const amount = product.price * Math.abs(qty);
-    return this.adjustmentTransactionRepository.createAdjustmentTransaction(sku, qty, amount);
+    return this.adjustmentTransactionRepository.createAdjustmentTransaction(sku, qty);
   }
 
   async updateAdjustmentTransaction(
@@ -74,13 +73,7 @@ export class AdjustmentTransactionService {
       );
     }
 
-    const amount = product.price * Math.abs(newQty);
-    return this.adjustmentTransactionRepository.updateAdjustmentTransaction(
-      id,
-      newSku,
-      newQty,
-      amount
-    );
+    return this.adjustmentTransactionRepository.updateAdjustmentTransaction(id, newSku, newQty);
   }
 
   async deleteAdjustmentTransaction(id: number): Promise<boolean> {

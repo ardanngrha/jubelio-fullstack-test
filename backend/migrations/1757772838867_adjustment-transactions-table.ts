@@ -7,7 +7,6 @@ export async function up(pgm: MigrationBuilder): Promise<void> {
     id: { type: 'serial', primaryKey: true },
     sku: { type: 'varchar(100)', notNull: true, references: 'products(sku)', onDelete: 'CASCADE' },
     qty: { type: 'integer', notNull: true },
-    amount: { type: 'decimal(10,2)', notNull: true },
     created_at: { type: 'timestamp', default: pgm.func('current_timestamp') },
     updated_at: { type: 'timestamp', default: pgm.func('current_timestamp') },
   });

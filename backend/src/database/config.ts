@@ -26,10 +26,10 @@ export const testDatabaseConfig: DatabaseConfig = {
   password: process.env.PGPASSWORD_TEST || process.env.PGPASSWORD || 'password',
 };
 
-export const getConnectionString = (config: DatabaseConfig): string => {
-  return `postgresql://${config.user}:${config.password}@${config.host}:${config.port}/${config.database}`;
+export const getCurrentDatabaseConfig = (): DatabaseConfig => {
+  return process.env.NODE_ENV === 'test' ? testDatabaseConfig : databaseConfig;
 };
 
-export const getCurrentDatabaseConfig = (): DatabaseConfig => {
-  return databaseConfig;
+export const getConnectionString = (config: DatabaseConfig): string => {
+  return `postgresql://${config.user}:${config.password}@${config.host}:${config.port}/${config.database}`;
 };
