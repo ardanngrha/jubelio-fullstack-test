@@ -7,8 +7,14 @@ import { useEffect } from 'react';
 import { AdjustmentFormDialog } from './components/adjustment-form-dialog';
 
 export default function AdjustmentsPage() {
-  const { adjustments, fetchAdjustments, page, totalPages, isLoading } =
-    useAdjustmentStore();
+  const {
+    adjustments,
+    fetchAdjustments,
+    page,
+    totalPages,
+    isLoading,
+    totalAdjustments,
+  } = useAdjustmentStore();
 
   useEffect(() => {
     fetchAdjustments(1);
@@ -23,9 +29,14 @@ export default function AdjustmentsPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold tracking-tight">
-          Adjust Transactions
-        </h1>
+        <div className="flex items-center gap-4">
+          <h1 className="text-3xl font-bold tracking-tight">
+            Adjust Transactions
+          </h1>
+          <span className="text-lg text-muted-foreground">
+            ({totalAdjustments} items)
+          </span>
+        </div>
         <AdjustmentFormDialog>
           <Button>New Adjustment</Button>
         </AdjustmentFormDialog>

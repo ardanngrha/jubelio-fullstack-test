@@ -11,6 +11,7 @@ interface AdjustmentState {
   adjustments: AdjustmentTransaction[];
   page: number;
   totalPages: number;
+  totalAdjustments: number;
   isLoading: boolean;
   fetchAdjustments: (page: number) => Promise<void>;
   addAdjustment: (adjustment: AdjustmentPayload) => Promise<void>;
@@ -25,13 +26,15 @@ const useAdjustmentStore = create<AdjustmentState>((set, get) => ({
   adjustments: [],
   page: 1,
   totalPages: 1,
+  totalAdjustments: 0,
   isLoading: false,
 
   fetchAdjustments: async (page: number) => {
     set({ isLoading: true });
     try {
-      const { adjustments, totalPages } = await getAdjustments(page, 10);
-      set({ adjustments, totalPages, page });
+      const { adjustments, totalPages, totalAdjustments } =
+        await getAdjustments(page, 10);
+      set({ adjustments, totalPages, page, totalAdjustments });
     } catch (error) {
       console.error('Failed to fetch adjustments', error);
     } finally {

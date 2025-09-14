@@ -33,6 +33,7 @@ export const columns: ColumnDef<AdjustmentTransaction>[] = [
   },
   {
     id: 'actions',
+    header: () => <div className="text-right">Actions</div>,
     cell: ({ row }) => {
       const adjustment = row.original;
       return (

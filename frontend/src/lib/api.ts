@@ -12,7 +12,11 @@ export const getProducts = async (
   page: number,
   limit: number,
   search?: string,
-): Promise<{ products: Product[]; hasMore: boolean }> => {
+): Promise<{
+  products: Product[];
+  totalPages: number;
+  totalProducts: number;
+}> => {
   const query = new URLSearchParams({
     page: String(page),
     limit: String(limit),
@@ -26,8 +30,24 @@ export const getProducts = async (
   console.log(data);
   return {
     products: data.data,
-    hasMore: data.pagination.total === limit,
+    totalPages: data.pagination.totalPages,
+    totalProducts: data.pagination.total,
   };
+};
+
+export const importProducts = async (): Promise<void> => {
+  const res = await fetch(`${API_BASE_URL}/products/import`);
+  if (!res.ok) throw new Error('Failed to fetch products from dummyjson');
+  const data = await res.json();
+  const products: ProductPayload[] = data.products.map((p: Product) => ({
+    title: p.title,
+    sku: p.sku,
+    image: p.image,
+    price: p.price,
+    description: p.description,
+  }));
+
+  await Promise.all(products.map((p) => createProduct(p)));
 };
 
 export const createProduct = async (
@@ -66,7 +86,11 @@ export const deleteProduct = async (sku: string): Promise<void> => {
 export const getAdjustments = async (
   page: number,
   limit: number,
-): Promise<{ adjustments: AdjustmentTransaction[]; totalPages: number }> => {
+): Promise<{
+  adjustments: AdjustmentTransaction[];
+  totalPages: number;
+  totalAdjustments: number;
+}> => {
   const query = new URLSearchParams({
     page: String(page),
     limit: String(limit),
@@ -78,6 +102,7 @@ export const getAdjustments = async (
   return {
     adjustments: data.data,
     totalPages: data.pagination.totalPages,
+    totalAdjustments: data.pagination.total,
   };
 };
 

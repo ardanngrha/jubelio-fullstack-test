@@ -1,33 +1,25 @@
 'use client';
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect } from 'react';
 import useProductStore from '@/stores/product-store';
 import { ProductCard } from './product-card';
 import { Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 
 export function ProductList() {
-  const { products, fetchProducts, hasMore, isLoading } = useProductStore();
-  const observer = useRef<IntersectionObserver | null>(null);
+  const { products, fetchProducts, page, totalPages, isLoading } =
+    useProductStore();
 
   useEffect(() => {
     // Initial fetch
-    if (products.length === 0) {
-      fetchProducts();
-    }
-  }, [fetchProducts, products.length]);
+    fetchProducts(1);
+  }, [fetchProducts]);
 
-  const lastProductElementRef = useCallback(
-    (node: HTMLDivElement) => {
-      if (isLoading) return;
-      if (observer.current) observer.current.disconnect();
-      observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && hasMore) {
-          fetchProducts();
-        }
-      });
-      if (node) observer.current.observe(node);
-    },
-    [isLoading, hasMore, fetchProducts],
-  );
+  const handlePageChange = (newPage: number) => {
+    if (newPage > 0 && newPage <= totalPages) {
+      fetchProducts(newPage);
+    }
+  };
 
   if (products.length === 0 && isLoading) {
     return (
@@ -47,17 +39,32 @@ export function ProductList() {
 
   return (
     <div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {products.map((product, index) => {
-          if (products.length === index + 1) {
-            return (
-              <div ref={lastProductElementRef} key={product.sku}>
-                <ProductCard product={product} />
-              </div>
-            );
-          }
-          return <ProductCard key={product.sku} product={product} />;
-        })}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 pb-8">
+        {products.map((product) => (
+          <ProductCard key={product.sku} product={product} />
+        ))}
+      </div>
+      <Separator />
+      <div className="flex items-center justify-center space-x-2 py-4">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => handlePageChange(page - 1)}
+          disabled={page <= 1}
+        >
+          Previous
+        </Button>
+        <span className="text-sm">
+          Page {page} of {totalPages}
+        </span>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => handlePageChange(page + 1)}
+          disabled={page >= totalPages}
+        >
+          Next
+        </Button>
       </div>
       {isLoading && (
         <div className="flex justify-center items-center p-8">

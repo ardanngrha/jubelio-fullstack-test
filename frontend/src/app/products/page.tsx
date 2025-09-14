@@ -7,9 +7,10 @@ import { Button } from '@/components/ui/button';
 import { ProductList } from './components/product-list';
 import { ProductFormDialog } from './components/product-form-dialog';
 import useDebounce from '@/hooks/use-debounce';
+import { ImportConfirmationDialog } from './components/import-confirmation-dialog';
 
 export default function ProductsPage() {
-  const setSearchQuery = useProductStore((state) => state.setSearchQuery);
+  const { totalProducts, setSearchQuery } = useProductStore();
   const [searchTerm, setSearchTerm] = useState('');
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
@@ -20,7 +21,12 @@ export default function ProductsPage() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-        <h1 className="text-3xl font-bold tracking-tight">Products</h1>
+        <div className="flex items-center gap-4">
+          <h1 className="text-3xl font-bold tracking-tight">Products</h1>
+          <span className="text-lg text-muted-foreground">
+            ({totalProducts} items)
+          </span>
+        </div>
         <div className="flex w-full sm:w-auto items-center space-x-2">
           <Input
             placeholder="Search products..."
@@ -28,6 +34,9 @@ export default function ProductsPage() {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full sm:w-[300px]"
           />
+          <ImportConfirmationDialog>
+            <Button variant="outline">Import</Button>
+          </ImportConfirmationDialog>
           <ProductFormDialog>
             <Button>Add Product</Button>
           </ProductFormDialog>
