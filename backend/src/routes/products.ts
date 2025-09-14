@@ -1,7 +1,11 @@
 import type { FastifyInstance } from 'fastify';
 import { ProductController } from '../controllers/productController.ts';
+import { ProductService } from '../services/productService.ts';
+import { ProductRepository } from '../repositories/productRepository.ts';
 
-const productController = new ProductController();
+const productRepository = new ProductRepository();
+const productService = new ProductService(productRepository);
+const productController = new ProductController(productService);
 
 export async function productRoutes(fastify: FastifyInstance): Promise<void> {
   // Get products with pagination

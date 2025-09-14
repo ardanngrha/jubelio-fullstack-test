@@ -34,6 +34,6 @@ $$ language 'plpgsql';`);
 
 export async function down(pgm: MigrationBuilder): Promise<void> {
   pgm.dropTrigger('products', 'update_products_updated_at');
-  pgm.dropIndex('products', 'idx_products_sku');
+  pgm.dropIndex('products', 'sku', { name: 'idx_products_sku' });
   pgm.dropTable('products');
 }

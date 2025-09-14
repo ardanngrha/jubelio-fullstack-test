@@ -1,12 +1,12 @@
 import type { FastifyReply, FastifyRequest } from 'fastify';
-import type { AdjustmentTransactionQuery } from '../models/AdjusmentTransaction.ts';
-import { AdjustmentTransactionService } from '../services/adjustmentTransactionService.ts';
+import type { AdjustmentTransactionQuery } from '../models/AdjustmentTransaction.ts';
+import type { AdjustmentTransactionService } from '../services/adjustmentTransactionService.ts';
 
 export class AdjustmentTransactionController {
   private adjustmentTransactionService: AdjustmentTransactionService;
 
-  constructor() {
-    this.adjustmentTransactionService = new AdjustmentTransactionService();
+  constructor(adjustmentTransactionService: AdjustmentTransactionService) {
+    this.adjustmentTransactionService = adjustmentTransactionService;
   }
 
   getAdjustmentTransactions = async (

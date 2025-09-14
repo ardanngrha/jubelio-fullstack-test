@@ -1,12 +1,12 @@
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import type { Product, ProductQuery } from '../models/Product.ts';
-import { ProductService } from '../services/productService.ts';
+import type { ProductService } from '../services/productService.ts';
 
 export class ProductController {
   private productService: ProductService;
 
-  constructor() {
-    this.productService = new ProductService();
+  constructor(productService: ProductService) {
+    this.productService = productService;
   }
 
   getProducts = async (

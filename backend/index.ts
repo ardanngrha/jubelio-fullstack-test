@@ -4,7 +4,7 @@ import { productRoutes } from './src/routes/products.ts';
 import { adjustmentRoutes } from './src/routes/adjustmentTransactions.ts';
 
 const server = fastify({
-  // logger: true,
+  logger: true,
 });
 
 // Register CORS

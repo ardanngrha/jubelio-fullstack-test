@@ -24,7 +24,7 @@ export async function up(pgm: MigrationBuilder): Promise<void> {
 
 export async function down(pgm: MigrationBuilder): Promise<void> {
   pgm.dropTrigger('adjustment_transactions', 'update_adjustment_transactions_updated_at');
-  pgm.dropIndex('adjustment_transactions', 'idx_adjustment_transactions_sku');
+  pgm.dropIndex('adjustment_transactions', 'sku', { name: 'idx_adjustment_transactions_sku' });
   pgm.dropTable('adjustment_transactions');
-  pgm.sql('DROP FUNCTION IF EXISTS update_updated_at_column();');
+  // pgm.sql('DROP FUNCTION IF EXISTS update_updated_at_column();');
 }

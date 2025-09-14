@@ -1,7 +1,18 @@
 import type { FastifyInstance } from 'fastify';
 import { AdjustmentTransactionController } from '../controllers/adjustmentTransactionController.ts';
+import { AdjustmentTransactionService } from '../services/adjustmentTransactionService.ts';
+import { AdjustmentTransactionRepository } from '../repositories/adjustmentTransactionRepository.ts';
+import { ProductRepository } from '../repositories/productRepository.ts';
 
-const adjustmentTransactionController = new AdjustmentTransactionController();
+const adjustmentTransactionRepository = new AdjustmentTransactionRepository();
+const productRepository = new ProductRepository();
+const adjustmentTransactionService = new AdjustmentTransactionService(
+  adjustmentTransactionRepository,
+  productRepository
+);
+const adjustmentTransactionController = new AdjustmentTransactionController(
+  adjustmentTransactionService
+);
 
 export async function adjustmentRoutes(fastify: FastifyInstance): Promise<void> {
   // Get adjustment transactions with pagination

@@ -1,27 +1,12 @@
 import pgPromise from 'pg-promise';
-import dotenv from 'dotenv';
-dotenv.config();
+import { getCurrentDatabaseConfig } from './config.ts';
 
 const pgp = pgPromise({});
+const config = getCurrentDatabaseConfig();
 
-export const connection = {
-  host: process.env.PGHOST || 'localhost',
-  port: parseInt(process.env.PGPORT || '5432'),
-  database: process.env.PGDATABASE || 'jubelio',
-  user: process.env.PGUSER || 'postgres',
-  password: process.env.PGPASSWORD || 'password',
-};
+console.log(`Connecting to database: ${config.database} on ${config.host}:${config.port}`);
 
-export const db = pgp(connection);
+const db = pgp(config);
 
-db.connect()
-  .then((obj) => {
-    obj.done(); // success, release the connection;
-    console.log('Connected to the database successfully.');
-  })
-  .catch((error) => {
-    console.error('Error connecting to the database:', error);
-    process.exit(1);
-  });
-
+export { pgp };
 export default db;
