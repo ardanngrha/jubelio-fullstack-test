@@ -20,9 +20,9 @@ export default function AdjustmentsPage() {
     fetchAdjustments(1);
   }, [fetchAdjustments]);
 
-  const handlePageChange = (newPage: number) => {
-    if (newPage > 0 && newPage <= totalPages) {
-      fetchAdjustments(newPage);
+  const handleLoadMore = () => {
+    if (page < totalPages) {
+      fetchAdjustments(page + 1);
     }
   };
 
@@ -42,9 +42,8 @@ export default function AdjustmentsPage() {
       <DataTable
         columns={columns}
         data={adjustments}
-        page={page}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
+        onLoadMore={handleLoadMore}
+        hasMore={page < totalPages}
         isLoading={isLoading}
       />
     </div>

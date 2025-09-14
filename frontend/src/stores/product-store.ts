@@ -48,12 +48,13 @@ const useProductStore = create<ProductState>((set, get) => ({
         totalPages,
         totalProducts,
       } = await getProducts(page, 8, searchQuery);
-      set({
-        products: newProducts,
+      set((state) => ({
+        products:
+          page === 1 ? newProducts : [...state.products, ...newProducts],
         page,
         totalPages,
         totalProducts,
-      });
+      }));
     } catch (error) {
       console.error('Failed to fetch products', error);
     } finally {
@@ -62,13 +63,13 @@ const useProductStore = create<ProductState>((set, get) => ({
   },
 
   setSearchQuery: (query: string) => {
-    set({ searchQuery: query, page: 1 });
+    set({ searchQuery: query, page: 1, products: [] });
     get().fetchProducts(1);
   },
 
   addProduct: async (productData: ProductPayload) => {
     await createProduct(productData);
-    get().fetchProducts(get().page);
+    get().fetchProducts(1);
   },
 
   updateProduct: async (sku: string, productData: ProductPayload) => {

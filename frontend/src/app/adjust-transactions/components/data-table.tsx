@@ -19,18 +19,16 @@ import { Loader2 } from 'lucide-react';
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  page: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
+  onLoadMore: () => void;
+  hasMore: boolean;
   isLoading: boolean;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  page,
-  totalPages,
-  onPageChange,
+  onLoadMore,
+  hasMore,
   isLoading,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
@@ -96,25 +94,19 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
       <div className="flex items-center justify-center space-x-2 py-4">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => onPageChange(page - 1)}
-          disabled={page <= 1}
-        >
-          Previous
-        </Button>
-        <span className="text-sm">
-          Page {page} of {totalPages}
-        </span>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => onPageChange(page + 1)}
-          disabled={page >= totalPages}
-        >
-          Next
-        </Button>
+        {hasMore && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onLoadMore}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : null}
+            Load More
+          </Button>
+        )}
       </div>
     </div>
   );

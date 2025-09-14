@@ -34,7 +34,13 @@ const useAdjustmentStore = create<AdjustmentState>((set, get) => ({
     try {
       const { adjustments, totalPages, totalAdjustments } =
         await getAdjustments(page, 10);
-      set({ adjustments, totalPages, page, totalAdjustments });
+      set((state) => ({
+        adjustments:
+          page === 1 ? adjustments : [...state.adjustments, ...adjustments],
+        totalPages,
+        page,
+        totalAdjustments,
+      }));
     } catch (error) {
       console.error('Failed to fetch adjustments', error);
     } finally {
@@ -44,17 +50,17 @@ const useAdjustmentStore = create<AdjustmentState>((set, get) => ({
 
   addAdjustment: async (adjustmentData: AdjustmentPayload) => {
     await createAdjustment(adjustmentData);
-    get().fetchAdjustments(get().page); // Refetch current page
+    get().fetchAdjustments(1);
   },
 
   updateAdjustment: async (id: number, adjustmentData: AdjustmentPayload) => {
     await updateAdjustment(id, adjustmentData);
-    get().fetchAdjustments(get().page); // Refetch current page
+    get().fetchAdjustments(get().page);
   },
 
   removeAdjustment: async (id: number) => {
     await deleteAdjustment(id);
-    get().fetchAdjustments(get().page); // Refetch current page
+    get().fetchAdjustments(get().page);
   },
 }));
 

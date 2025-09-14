@@ -19,6 +19,7 @@ import { Label } from '@/components/ui/label';
 import useProductStore from '@/stores/product-store';
 import { Product, ProductPayload } from '@/types';
 import { DeleteConfirmationDialog } from './delete-confirmation-dialog';
+import { Textarea } from '@/components/ui/textarea';
 
 interface ProductFormDialogProps {
   children: React.ReactNode;
@@ -129,7 +130,7 @@ export function ProductFormDialog({
             <Label htmlFor="image" className="text-right">
               Image URL
             </Label>
-            <Input
+            <Textarea
               id="image"
               {...form.register('image')}
               className="col-span-3"
@@ -161,7 +162,7 @@ export function ProductFormDialog({
             <Label htmlFor="description" className="text-right">
               Description
             </Label>
-            <Input
+            <Textarea
               id="description"
               {...form.register('description')}
               className="col-span-3"
