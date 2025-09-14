@@ -19,7 +19,6 @@ export class AdjustmentTransactionController {
       );
       reply.send(response);
     } catch (error) {
-      console.error('Error fetching adjustment transactions:', error);
       reply.status(500).send({
         error: 'Failed to fetch adjustment transactions',
         message: (error as Error).message,
@@ -43,7 +42,6 @@ export class AdjustmentTransactionController {
 
       reply.send(transaction);
     } catch (error) {
-      console.error('Error fetching transaction detail:', error);
       reply
         .status(500)
         .send({ error: 'Failed to fetch transaction detail', message: (error as Error).message });
@@ -62,8 +60,6 @@ export class AdjustmentTransactionController {
       );
       reply.status(201).send(transaction);
     } catch (error) {
-      console.error('Error creating adjustment transaction:', error);
-
       if (error instanceof Error) {
         if (error.message === 'Product not found') {
           return reply.status(404).send({ error: error.message });
@@ -99,8 +95,6 @@ export class AdjustmentTransactionController {
 
       reply.send(transaction);
     } catch (error) {
-      console.error('Error updating adjustment transaction:', error);
-
       if (error instanceof Error) {
         if (error.message === 'Transaction not found' || error.message === 'Product not found') {
           return reply.status(404).send({ error: error.message });
@@ -133,7 +127,6 @@ export class AdjustmentTransactionController {
 
       reply.status(200).send({ message: 'Adjustment transaction deleted successfully' });
     } catch (error) {
-      console.error('Error deleting adjustment transaction:', error);
       reply.status(500).send({
         error: 'Failed to delete adjustment transaction',
         message: (error as Error).message,

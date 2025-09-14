@@ -25,6 +25,10 @@ export function buildServer(): FastifyInstance {
 
   // Global error handler
   server.setErrorHandler(function (error, request, reply) {
+    if (error.validation) {
+      reply.status(400).send(error);
+      return;
+    }
     console.error(error);
     reply.status(500).send({ error: 'Something went wrong' });
   });

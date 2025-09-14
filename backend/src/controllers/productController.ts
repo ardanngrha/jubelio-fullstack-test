@@ -17,7 +17,6 @@ export class ProductController {
       const response = await this.productService.getProducts(request.query);
       reply.send(response);
     } catch (error) {
-      console.error('Error fetching products:', error);
       reply
         .status(500)
         .send({ error: 'Failed to fetch products', message: (error as Error).message });
@@ -38,7 +37,6 @@ export class ProductController {
 
       reply.send(product);
     } catch (error) {
-      console.error('Error fetching product detail:', error);
       reply
         .status(500)
         .send({ error: 'Failed to fetch product detail', message: (error as Error).message });
@@ -55,7 +53,6 @@ export class ProductController {
       const product = await this.productService.createProduct(request.body);
       reply.status(201).send(product);
     } catch (error: unknown) {
-      console.error('Error creating product:', error);
       if (
         typeof error === 'object' &&
         error !== null &&
@@ -74,12 +71,14 @@ export class ProductController {
 
   updateProduct = async (
     request: FastifyRequest<{
+      Params: { sku: string };
       Body: Partial<Omit<Product, 'id' | 'sku' | 'created_at' | 'updated_at'>>;
     }>,
     reply: FastifyReply
   ): Promise<void> => {
     try {
-      const product = await this.productService.updateProduct(request.body);
+      const { sku } = request.params;
+      const product = await this.productService.updateProduct({ ...request.body, sku });
 
       if (!product) {
         return reply.status(404).send({ error: 'Product not found' });
@@ -87,7 +86,6 @@ export class ProductController {
 
       reply.send(product);
     } catch (error) {
-      console.error('Error updating product:', error);
       reply
         .status(500)
         .send({ error: 'Failed to update product', message: (error as Error).message });
@@ -110,7 +108,6 @@ export class ProductController {
         message: 'Product deleted successfully',
       });
     } catch (error) {
-      console.error('Error deleting product:', error);
       reply
         .status(500)
         .send({ error: 'Failed to delete product', message: (error as Error).message });
@@ -125,7 +122,6 @@ export class ProductController {
       const result = await this.productService.importProductsFromDummyJson();
       reply.send(result);
     } catch (error) {
-      console.error('Error importing products:', error);
       reply
         .status(500)
         .send({ error: 'Failed to import products', message: (error as Error).message });
