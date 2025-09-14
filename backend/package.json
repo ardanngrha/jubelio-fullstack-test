@@ -15,8 +15,7 @@
     "test": "NODE_ENV=test node   --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
     "test:watch": "NODE_ENV=test node   --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --watch",
     "test:coverage": "NODE_ENV=test node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
-    "lint": "eslint . --ext .ts",
-    "format": "prettier --write src/**/*.ts"
+    "lint": "eslint . --ext .ts"
   },
   "dependencies": {
     "@fastify/cors": "^11.1.0",

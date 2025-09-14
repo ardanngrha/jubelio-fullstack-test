@@ -6,7 +6,7 @@ import { adjustmentRoutes } from './routes/adjustmentTransactions.ts';
 
 export function buildServer(): FastifyInstance {
   const server = fastify({
-    logger: true,
+    // logger: true,
   });
 
   // Register CORS

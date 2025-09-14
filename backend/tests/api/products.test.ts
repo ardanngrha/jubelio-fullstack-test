@@ -214,10 +214,10 @@ describe('/products endpoint', () => {
     });
   });
 
-  describe('when POST /products/import', () => {
+  describe('when GET /products/import', () => {
     it('should respond 200 and import products', async () => {
       // Action
-      const response = await supertest(server.server).post('/api/products/import');
+      const response = await supertest(server.server).get('/api/products/import');
 
       // Assert
       expect(response.status).toEqual(200);
