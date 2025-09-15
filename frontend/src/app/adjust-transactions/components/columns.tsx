@@ -8,8 +8,12 @@ import { MoreHorizontal } from 'lucide-react';
 
 export const columns: ColumnDef<AdjustmentTransaction>[] = [
   {
-    accessorKey: 'id',
-    header: 'ID',
+    accessorKey: 'number',
+    header: 'Number',
+    cell: ({ row }) => {
+      const sequenceNumber = row.index + 1;
+      return <div className="font-medium">{sequenceNumber}</div>;
+    },
   },
   {
     accessorKey: 'sku',

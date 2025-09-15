@@ -5,7 +5,6 @@ import { buildServer } from '../../src/server.ts';
 import { productsTableHelper } from '../helpers/productsTableHelper.ts';
 import { adjustmentTableHelper } from '../helpers/adjustmentTransactionsTableHelper.ts';
 import type { Product } from '../../src/models/Product.ts';
-// import type { AdjustmentTransaction } from '../../src/models/AdjustmentTransaction.ts';
 import db from '../../src/database/connection.ts';
 
 describe('/adjustments endpoint', () => {
@@ -87,6 +86,8 @@ describe('/adjustments endpoint', () => {
       expect(response.status).toEqual(200);
       expect(response.body.id).toEqual(adjustment.id);
       expect(response.body.sku).toEqual(adjustment.sku);
+      expect(response.body.qty).toEqual(adjustment.qty);
+      expect(response.body.amount).toEqual((product.price * adjustment.qty).toFixed(2));
     });
 
     it('should respond 404 when the adjustment transaction is not found', async () => {
@@ -95,6 +96,7 @@ describe('/adjustments endpoint', () => {
 
       // Assert
       expect(response.status).toEqual(404);
+      expect(response.body.message).toEqual('Transaction not found');
     });
   });
 
@@ -111,11 +113,11 @@ describe('/adjustments endpoint', () => {
 
       // Assert
       expect(response.status).toEqual(201);
-      const responseJson = response.body;
-      expect(responseJson.id).toBeDefined();
-      expect(responseJson.sku).toEqual(requestPayload.sku);
-      expect(responseJson.qty).toEqual(requestPayload.qty);
-      expect(responseJson.amount).toEqual((product.price * requestPayload.qty).toFixed(2));
+      const responseData = response.body.data;
+      expect(responseData.id).toBeDefined();
+      expect(responseData.sku).toEqual(requestPayload.sku);
+      expect(responseData.qty).toEqual(requestPayload.qty);
+      expect(responseData.amount).toEqual((product.price * requestPayload.qty).toFixed(2));
     });
 
     it('should respond 404 when product not found', async () => {
@@ -130,7 +132,7 @@ describe('/adjustments endpoint', () => {
 
       // Assert
       expect(response.status).toEqual(404);
-      expect(response.body.error).toEqual('Product not found');
+      expect(response.body.message).toEqual('Product not found');
     });
 
     it('should respond 400 when transaction would result in negative stock', async () => {
@@ -146,7 +148,7 @@ describe('/adjustments endpoint', () => {
 
       // Assert
       expect(response.status).toEqual(400);
-      expect(response.body.error).toContain('negative stock');
+      expect(response.body.message).toContain('negative stock');
     });
   });
 
@@ -168,7 +170,7 @@ describe('/adjustments endpoint', () => {
 
       // Assert
       expect(response.status).toEqual(200);
-      expect(response.body.qty).toEqual(requestPayload.qty);
+      expect(response.body.data.qty).toEqual(requestPayload.qty);
     });
 
     it('should respond 404 when the transaction is not found', async () => {
@@ -184,6 +186,7 @@ describe('/adjustments endpoint', () => {
 
       // Assert
       expect(response.status).toEqual(404);
+      expect(response.body.message).toEqual('Transaction not found');
     });
   });
 
@@ -209,6 +212,7 @@ describe('/adjustments endpoint', () => {
 
       // Assert
       expect(response.status).toEqual(404);
+      expect(response.body.message).toEqual('Transaction not found');
     });
   });
 });

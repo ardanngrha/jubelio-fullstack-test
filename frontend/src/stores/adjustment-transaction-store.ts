@@ -13,7 +13,9 @@ interface AdjustmentState {
   totalPages: number;
   totalAdjustments: number;
   isLoading: boolean;
+  searchQuery: string;
   fetchAdjustments: (page: number) => Promise<void>;
+  setSearchQuery: (query: string) => void;
   addAdjustment: (adjustment: AdjustmentPayload) => Promise<void>;
   updateAdjustment: (
     id: number,
@@ -28,19 +30,15 @@ const useAdjustmentStore = create<AdjustmentState>((set, get) => ({
   totalPages: 1,
   totalAdjustments: 0,
   isLoading: false,
+  searchQuery: '',
 
   fetchAdjustments: async (page: number) => {
+    const { searchQuery } = get();
     set({ isLoading: true });
     try {
       const { adjustments, totalPages, totalAdjustments } =
-        await getAdjustments(page, 10);
-      set((state) => ({
-        adjustments:
-          page === 1 ? adjustments : [...state.adjustments, ...adjustments],
-        totalPages,
-        page,
-        totalAdjustments,
-      }));
+        await getAdjustments(page, 10, searchQuery);
+      set({ adjustments, totalPages, page, totalAdjustments });
     } catch (error) {
       console.error('Failed to fetch adjustments', error);
     } finally {
@@ -48,9 +46,14 @@ const useAdjustmentStore = create<AdjustmentState>((set, get) => ({
     }
   },
 
+  setSearchQuery: (query: string) => {
+    set({ searchQuery: query });
+    get().fetchAdjustments(1);
+  },
+
   addAdjustment: async (adjustmentData: AdjustmentPayload) => {
     await createAdjustment(adjustmentData);
-    get().fetchAdjustments(1);
+    get().fetchAdjustments(get().page);
   },
 
   updateAdjustment: async (id: number, adjustmentData: AdjustmentPayload) => {

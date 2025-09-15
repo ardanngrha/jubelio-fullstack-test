@@ -32,7 +32,7 @@ export class ProductController {
       const product = await this.productService.getProductBySku(sku);
 
       if (!product) {
-        return reply.status(404).send({ error: 'Product not found' });
+        return reply.status(404).send({ message: 'Product not found' });
       }
 
       reply.send(product);
@@ -51,8 +51,8 @@ export class ProductController {
   ): Promise<void> => {
     try {
       const product = await this.productService.createProduct(request.body);
-      reply.status(201).send(product);
-    } catch (error: unknown) {
+      reply.status(201).send({ message: 'Product created successfully', data: product });
+    } catch (error) {
       if (
         typeof error === 'object' &&
         error !== null &&
@@ -60,7 +60,7 @@ export class ProductController {
         (error as { code?: string }).code === '23505'
       ) {
         // Unique violation
-        reply.status(409).send({ error: 'SKU already exists' });
+        reply.status(409).send({ message: 'SKU already exists' });
       } else {
         reply
           .status(500)

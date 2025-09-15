@@ -37,7 +37,7 @@ export class AdjustmentTransactionController {
       );
 
       if (!transaction) {
-        return reply.status(404).send({ error: 'Transaction not found' });
+        return reply.status(404).send({ message: 'Transaction not found' });
       }
 
       reply.send(transaction);
@@ -58,14 +58,17 @@ export class AdjustmentTransactionController {
         sku,
         qty
       );
-      reply.status(201).send(transaction);
+      reply.status(201).send({
+        message: 'Adjustment created successfully!',
+        data: transaction,
+      });
     } catch (error) {
       if (error instanceof Error) {
         if (error.message === 'Product not found') {
-          return reply.status(404).send({ error: error.message });
+          return reply.status(404).send({ message: error.message });
         }
         if (error.message.includes('negative stock')) {
-          return reply.status(400).send({ error: error.message });
+          return reply.status(400).send({ message: error.message });
         }
       }
 
@@ -93,14 +96,17 @@ export class AdjustmentTransactionController {
         qty
       );
 
-      reply.send(transaction);
+      reply.send({
+        message: 'Adjustment updated successfully!',
+        data: transaction,
+      });
     } catch (error) {
       if (error instanceof Error) {
         if (error.message === 'Transaction not found' || error.message === 'Product not found') {
-          return reply.status(404).send({ error: error.message });
+          return reply.status(404).send({ message: error.message });
         }
         if (error.message.includes('negative stock')) {
-          return reply.status(400).send({ error: error.message });
+          return reply.status(400).send({ message: error.message });
         }
       }
 
@@ -122,7 +128,7 @@ export class AdjustmentTransactionController {
       );
 
       if (!deleted) {
-        return reply.status(404).send({ error: 'Transaction not found' });
+        return reply.status(404).send({ message: 'Transaction not found' });
       }
 
       reply.status(200).send({ message: 'Adjustment transaction deleted successfully' });

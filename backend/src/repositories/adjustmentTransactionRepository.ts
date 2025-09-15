@@ -15,11 +15,13 @@ export class AdjustmentTransactionRepository {
     const offset = (validPage - 1) * validLimit;
 
     let whereClause = '';
-    const params: unknown[] = [validLimit, offset];
+    const params: (string | number)[] = [validLimit, offset];
+    const countParams: (string | number)[] = [];
 
     if (sku) {
-      whereClause = 'WHERE sku = $3';
-      params.push(sku);
+      whereClause = 'WHERE a.sku ILIKE $3';
+      params.push(`%${sku}%`);
+      countParams.push(`%${sku}%`);
     }
 
     const queryStr = `
@@ -40,17 +42,14 @@ export class AdjustmentTransactionRepository {
     const countQuery = `
       SELECT COUNT(*) as total 
       FROM adjustment_transactions a
-      JOIN products p ON a.sku = p.sku
-      ${whereClause}
+      ${whereClause.replace('a.sku', 'a.sku')}
     `;
 
     const [transactions, countResult] = await Promise.all([
       db.any(queryStr, params),
       db.one(
-        sku
-          ? countQuery
-          : 'SELECT COUNT(*) as total FROM adjustment_transactions a JOIN products p ON a.sku = p.sku',
-        sku ? [sku] : []
+        sku ? countQuery : 'SELECT COUNT(*) as total FROM adjustment_transactions',
+        countParams
       ),
     ]);
 

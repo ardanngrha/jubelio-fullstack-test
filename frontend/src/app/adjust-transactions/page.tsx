@@ -3,8 +3,10 @@ import useAdjustmentStore from '@/stores/adjustment-transaction-store';
 import { Button } from '@/components/ui/button';
 import { DataTable } from './components/data-table';
 import { columns } from './components/columns';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { AdjustmentFormDialog } from './components/adjustment-form-dialog';
+import { Input } from '@/components/ui/input';
+import useDebounce from '@/hooks/use-debounce';
 
 export default function AdjustmentsPage() {
   const {
@@ -14,15 +16,22 @@ export default function AdjustmentsPage() {
     totalPages,
     isLoading,
     totalAdjustments,
+    setSearchQuery,
   } = useAdjustmentStore();
+  const [searchTerm, setSearchTerm] = useState('');
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   useEffect(() => {
     fetchAdjustments(1);
   }, [fetchAdjustments]);
 
-  const handleLoadMore = () => {
-    if (page < totalPages) {
-      fetchAdjustments(page + 1);
+  useEffect(() => {
+    setSearchQuery(debouncedSearchTerm);
+  }, [debouncedSearchTerm, setSearchQuery]);
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage > 0 && newPage <= totalPages) {
+      fetchAdjustments(newPage);
     }
   };
 
@@ -35,15 +44,24 @@ export default function AdjustmentsPage() {
             ({totalAdjustments} items)
           </span>
         </div>
-        <AdjustmentFormDialog>
-          <Button>New Adjustment</Button>
-        </AdjustmentFormDialog>
+        <div className="flex w-full sm:w-auto items-center space-x-2">
+          <Input
+            placeholder="Search by SKU..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full sm:w-[300px]"
+          />
+          <AdjustmentFormDialog>
+            <Button>New Adjustment</Button>
+          </AdjustmentFormDialog>
+        </div>
       </div>
       <DataTable
         columns={columns}
         data={adjustments}
-        onLoadMore={handleLoadMore}
-        hasMore={page < totalPages}
+        page={page}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
         isLoading={isLoading}
       />
     </div>

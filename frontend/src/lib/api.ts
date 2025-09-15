@@ -5,7 +5,7 @@ import {
   AdjustmentPayload,
 } from '@/types';
 
-const API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL = process.env.API_URL || 'http://localhost:8080/api';
 
 // Product API Calls
 export const getProducts = async (
@@ -83,6 +83,7 @@ export const deleteProduct = async (sku: string): Promise<void> => {
 export const getAdjustments = async (
   page: number,
   limit: number,
+  sku?: string,
 ): Promise<{
   adjustments: AdjustmentTransaction[];
   totalPages: number;
@@ -92,6 +93,9 @@ export const getAdjustments = async (
     page: String(page),
     limit: String(limit),
   });
+  if (sku) {
+    query.set('search', sku);
+  }
   const res = await fetch(`${API_BASE_URL}/adjustments?${query.toString()}`);
   if (!res.ok) throw new Error('Failed to fetch adjustments');
   const data = await res.json();
@@ -104,40 +108,42 @@ export const getAdjustments = async (
 
 export const createAdjustment = async (
   adjustment: AdjustmentPayload,
-): Promise<AdjustmentTransaction> => {
+): Promise<any> => {
   const res = await fetch(`${API_BASE_URL}/adjustments`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(adjustment),
   });
+  const data = await res.json();
   if (!res.ok) {
-    const errorData = await res.json();
-    console.log(errorData);
-    throw new Error(errorData.message || 'Failed to create adjustment');
+    throw new Error(data.message || 'Failed to create adjustment');
   }
-  return res.json();
+  return data;
 };
 
 export const updateAdjustment = async (
   id: number,
   adjustment: AdjustmentPayload,
-): Promise<AdjustmentTransaction> => {
+): Promise<any> => {
   const res = await fetch(`${API_BASE_URL}/adjustments/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(adjustment),
   });
+  const data = await res.json();
   if (!res.ok) {
-    const errorData = await res.json();
-    console.log(errorData);
-    throw new Error(errorData.message || 'Failed to update adjustment');
+    throw new Error(data.message || 'Failed to update adjustment');
   }
-  return res.json();
+  return data;
 };
 
-export const deleteAdjustment = async (id: number): Promise<void> => {
+export const deleteAdjustment = async (id: number): Promise<any> => {
   const res = await fetch(`${API_BASE_URL}/adjustments/${id}`, {
     method: 'DELETE',
   });
-  if (!res.ok) throw new Error('Failed to delete adjustment');
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || 'Failed to delete adjustment');
+  }
+  return data;
 };

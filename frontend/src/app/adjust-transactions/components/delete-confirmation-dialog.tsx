@@ -28,10 +28,10 @@ export function DeleteConfirmationDialog({
   const handleDelete = async () => {
     try {
       await removeAdjustment(adjustmentId);
-      toast.success('Adjustment deleted successfully');
+      toast.success('Adjustment Transaction deleted successfully.');
       setOpen(false);
     } catch (error) {
-      toast.error('Failed to delete adjustment');
+      toast.error('Failed to delete Adjustment Transaction.');
       console.error(error);
     }
   };

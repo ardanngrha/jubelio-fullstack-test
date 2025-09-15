@@ -52,11 +52,11 @@ export function AdjustmentFormDialog({
     try {
       const payload: AdjustmentPayload = values;
       if (isEditMode) {
-        await updateAdjustment(adjustment.id, payload);
-        toast.success('Adjustment updated successfully!');
+        await updateAdjustment(adjustment!.id, payload);
+        toast.success('Adjustment Transaction updated successfully.');
       } else {
         await addAdjustment(payload);
-        toast.success('Adjustment created successfully!');
+        toast.success('Adjustment Transaction created successfully.');
         form.reset();
       }
       setOpen(false);

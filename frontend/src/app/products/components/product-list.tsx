@@ -46,16 +46,18 @@ export function ProductList() {
 
   return (
     <div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 pb-8">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 pb-8">
         {products.map((product, index) => {
           if (products.length === index + 1) {
             return (
-              <div ref={lastProductElementRef} key={product.sku}>
+              <div ref={lastProductElementRef} key={`${product.sku}-${index}`}>
                 <ProductCard product={product} />
               </div>
             );
           } else {
-            return <ProductCard key={product.sku} product={product} />;
+            return (
+              <ProductCard key={`${product.sku}-${index}`} product={product} />
+            );
           }
         })}
       </div>
