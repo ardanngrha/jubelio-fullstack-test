@@ -5,7 +5,7 @@ import {
   AdjustmentPayload,
 } from '@/types';
 
-const API_BASE_URL = process.env.API_URL || 'http://localhost:8080/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 // Product API Calls
 export const getProducts = async (
@@ -94,7 +94,7 @@ export const getAdjustments = async (
     limit: String(limit),
   });
   if (sku) {
-    query.set('search', sku);
+    query.set('sku', sku);
   }
   const res = await fetch(`${API_BASE_URL}/adjustments?${query.toString()}`);
   if (!res.ok) throw new Error('Failed to fetch adjustments');
