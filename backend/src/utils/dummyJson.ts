@@ -1,4 +1,3 @@
-import fetch from 'node-fetch';
 import type { Product } from '../models/Product.ts';
 
 interface DummyJsonProduct {
