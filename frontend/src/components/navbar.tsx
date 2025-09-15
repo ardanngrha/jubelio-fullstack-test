@@ -9,7 +9,7 @@ export function Navbar() {
 
   const routes = [
     { href: '/products', label: 'Products' },
-    { href: '/adjust-transactions', label: 'Adjust Transactions' },
+    { href: '/adjust-transactions', label: 'Transactions' },
   ];
 
   return (

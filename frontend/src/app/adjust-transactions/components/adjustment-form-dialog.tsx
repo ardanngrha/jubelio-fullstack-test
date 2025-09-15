@@ -53,10 +53,10 @@ export function AdjustmentFormDialog({
       const payload: AdjustmentPayload = values;
       if (isEditMode) {
         await updateAdjustment(adjustment!.id, payload);
-        toast.success('Adjustment Transaction updated successfully.');
+        toast.success('Transaction updated successfully.');
       } else {
         await addAdjustment(payload);
-        toast.success('Adjustment Transaction created successfully.');
+        toast.success('Transaction created successfully.');
         form.reset();
       }
       setOpen(false);
@@ -73,7 +73,7 @@ export function AdjustmentFormDialog({
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>
-            {isEditMode ? 'Edit Adjustment' : 'New Adjustment'}
+            {isEditMode ? 'Edit Transaction' : 'New Transaction'}
           </DialogTitle>
           <DialogDescription>
             {isEditMode

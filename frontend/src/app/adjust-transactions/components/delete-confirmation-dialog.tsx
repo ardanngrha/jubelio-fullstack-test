@@ -28,10 +28,10 @@ export function DeleteConfirmationDialog({
   const handleDelete = async () => {
     try {
       await removeAdjustment(adjustmentId);
-      toast.success('Adjustment Transaction deleted successfully.');
+      toast.success('Transaction deleted successfully.');
       setOpen(false);
     } catch (error) {
-      toast.error('Failed to delete Adjustment Transaction.');
+      toast.error('Failed to delete Transaction.');
       console.error(error);
     }
   };
@@ -49,7 +49,7 @@ export function DeleteConfirmationDialog({
           <DialogTitle>Are you sure?</DialogTitle>
           <DialogDescription>
             This action cannot be undone. This will permanently delete the
-            adjustment transaction.
+            transaction.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>

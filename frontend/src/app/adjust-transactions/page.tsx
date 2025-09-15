@@ -52,7 +52,7 @@ export default function AdjustmentsPage() {
             className="w-full sm:w-[300px]"
           />
           <AdjustmentFormDialog>
-            <Button>New Adjustment</Button>
+            <Button>New Transaction</Button>
           </AdjustmentFormDialog>
         </div>
       </div>
