@@ -79,7 +79,7 @@ export const deleteProduct = async (sku: string): Promise<void> => {
   if (!res.ok) throw new Error('Failed to delete product');
 };
 
-// Adjustment API Calls
+// Adjustment Transactions API Calls
 export const getAdjustments = async (
   page: number,
   limit: number,
@@ -108,7 +108,7 @@ export const getAdjustments = async (
 
 export const createAdjustment = async (
   adjustment: AdjustmentPayload,
-): Promise<any> => {
+): Promise<AdjustmentTransaction> => {
   const res = await fetch(`${API_BASE_URL}/adjustments`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -124,7 +124,7 @@ export const createAdjustment = async (
 export const updateAdjustment = async (
   id: number,
   adjustment: AdjustmentPayload,
-): Promise<any> => {
+): Promise<AdjustmentTransaction> => {
   const res = await fetch(`${API_BASE_URL}/adjustments/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
@@ -137,7 +137,9 @@ export const updateAdjustment = async (
   return data;
 };
 
-export const deleteAdjustment = async (id: number): Promise<any> => {
+export const deleteAdjustment = async (
+  id: number,
+): Promise<AdjustmentTransaction> => {
   const res = await fetch(`${API_BASE_URL}/adjustments/${id}`, {
     method: 'DELETE',
   });

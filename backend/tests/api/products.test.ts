@@ -101,7 +101,7 @@ describe('/products endpoint', () => {
 
       // Assert
       expect(response.status).toEqual(201);
-      const responseJson = response.body;
+      const responseJson = response.body.data;
       expect(responseJson.id).toBeDefined();
       expect(responseJson.title).toEqual(requestPayload.title);
       expect(responseJson.sku).toEqual(requestPayload.sku);
@@ -152,7 +152,7 @@ describe('/products endpoint', () => {
 
       // Assert
       expect(response.status).toEqual(409);
-      expect(response.body.error).toEqual('SKU already exists');
+      expect(response.body.message).toEqual('SKU already exists');
     });
   });
 
