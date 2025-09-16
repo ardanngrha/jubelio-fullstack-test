@@ -55,6 +55,11 @@ const useProductStore = create<ProductState>((set, get) => ({
         totalPages,
         totalProducts,
       }));
+
+      if (newProducts.length === 0 && page > 1) {
+        get().fetchProducts(page - 1);
+        return;
+      }
     } catch (error) {
       console.error('Failed to fetch products', error);
     } finally {
@@ -73,11 +78,17 @@ const useProductStore = create<ProductState>((set, get) => ({
   },
 
   updateProduct: async (sku: string, productData: ProductPayload) => {
+    set((state) => ({
+      products: state.products.map((p) =>
+        p.sku === sku ? { ...p, ...productData } : p,
+      ),
+    }));
     await updateProduct(sku, productData);
     get().fetchProducts(get().page);
   },
 
   removeProduct: async (sku: string) => {
+    set((state) => ({ products: state.products.filter((p) => p.sku !== sku) }));
     await deleteProduct(sku);
     get().fetchProducts(get().page);
   },

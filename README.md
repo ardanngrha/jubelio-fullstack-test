@@ -36,7 +36,7 @@
    ```
 
 3. Set up the database:
-  Create a PostgreSQL database named `jubelio` and `jubelio_test`.
+  Create two PostgreSQL databases named `jubelio` and `jubelio_test`.
 
 4. Copy the example environment file and configure it:
 
@@ -73,7 +73,7 @@
       }
    ```
 
-   This configuration is used when running tests using `Jest` and `Supertest` to ensure they do not interfere with the development database.
+   This configuration is used when running tests using `Jest` and `Supertest` to ensure they do not interfere with the production database.
 
 6. Run database migrations for testing and production:
 
@@ -156,6 +156,8 @@
   The frontend application will be running at `http://localhost:3000` if you haven't changed the default port.
 
 ### API Endpoints
+
+You can use `Postman` and import the provided [api.postman_collection.json](api.postman_collection.json) file to test the API endpoints.
 
 - `GET /api/products/import`: Import initial products from `dummyjson.com` into the database.
 - `GET /api/products`:  

@@ -1,0 +1,372 @@
+{
+	"info": {
+		"_postman_id": "bbd1100f-9ad7-4219-96a6-2fad7885742a",
+		"name": "Jubelio E-Commerce API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "45198573"
+	},
+	"item": [
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Import Products from DummyJSON",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/products/import",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"import"
+							]
+						},
+						"description": "Fetches products from https://dummyjson.com and saves them to the local database. Ensures that no duplicate products (based on SKU or other unique identifiers) are created."
+					},
+					"response": []
+				},
+				{
+					"name": "Get List Product",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/products?page=1&limit=8",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"products"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "8"
+								}
+							]
+						},
+						"description": "Retrieves a paginated list of products. Returns Title, SKU, Image, Price, and calculated Stock."
+					},
+					"response": []
+				},
+				{
+					"name": "Get List Product With Search",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/products?search=phone&page=1&limit=8",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"products"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "phone"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "8"
+								}
+							]
+						},
+						"description": "Retrieves a paginated list of products. Returns Title, SKU, Image, Price, and calculated Stock."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Product",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Brand New Gadget\",\n  \"sku\": \"BNG-002\",\n  \"image\": \"https://images.unsplash.com/photo-1679421253067-b5adad691552?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\",\n  \"price\": 199.99,\n  \"description\": \"An amazing new gadget for all your needs.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/products",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"products"
+							]
+						},
+						"description": "Creates a new product. SKU must be unique. The initial stock will be 0 until an adjustment transaction is made."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Detail Product",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/products/BNG-001",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"BNG-001"
+							]
+						},
+						"description": "Retrieves the full details for a single product by its ID. Returns Title, SKU, Image, Price, Stock, and Description."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Product",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Updated Gadget Name 2\",\n  \"sku\": \"BNG-001\",\n  \"image\": \"https://images.unsplash.com/photo-1679421253067-b5adad691552?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\",\n  \"price\": 249.99,\n  \"description\": \"An updated description for this amazing gadget.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/products/BNG-001",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"BNG-001"
+							]
+						},
+						"description": "Updates an existing product's details by its ID. SKU should generally not be changed, but other fields can be updated."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Product",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/products/BNG-001",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"BNG-001"
+							]
+						},
+						"description": "Deletes a product by its ID. As per requirements, all associated adjustment transactions for this product will also be deleted."
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints for managing products."
+		},
+		{
+			"name": "Adjustment Transactions",
+			"item": [
+				{
+					"name": "Get List Transactions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/adjustments?page=1&limit=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"adjustments"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "The page number for pagination."
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "The number of items to return per page."
+								}
+							]
+						},
+						"description": "Retrieves a paginated list of adjustment transactions. Returns SKU, Qty, and calculated Amount."
+					},
+					"response": []
+				},
+				{
+					"name": "Get List Transactions with Search",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/adjustments?sku=002&page=1&limit=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"adjustments"
+							],
+							"query": [
+								{
+									"key": "sku",
+									"value": "002"
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"description": "The page number for pagination."
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "The number of items to return per page."
+								}
+							]
+						},
+						"description": "Retrieves a paginated list of adjustment transactions. Returns SKU, Qty, and calculated Amount."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Adjustment Transaction",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"sku\": \"BNG-002\",\n  \"qty\": 100\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/adjustments",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"adjustments"
+							]
+						},
+						"description": "Creates a new stock adjustment. Qty can be positive (stock in) or negative (stock out). A transaction that results in a total stock of less than 0 should be rejected."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Detail Transaction",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/adjustments/37",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"adjustments",
+								"37"
+							]
+						},
+						"description": "Retrieves the details of a single adjustment transaction by its ID. Returns SKU, Qty, and calculated Amount."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Adjustment Transaction",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"sku\": \"BNG-002\",\n  \"qty\": 10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/adjustments/37",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"adjustments",
+								"37"
+							]
+						},
+						"description": "Updates an existing adjustment transaction by its ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Adjustment Transaction",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/adjustments/37",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"adjustments",
+								"37"
+							]
+						},
+						"description": "Deletes an adjustment transaction by its ID. This will affect the calculated stock of the associated product."
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints for managing stock adjustment transactions."
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000",
+			"type": "string",
+			"description": "The base URL for the API."
+		}
+	]
+}
